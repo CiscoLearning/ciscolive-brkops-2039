@@ -1,0 +1,31 @@
+---
+- name: Deploy VM from a template
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Deploy VM
+      vmware_guest:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        datacenter: "{{ datacenter }}"
+        cluster: "{{ cluster }}"
+        template: "{{ vm_template }}"
+        networks:
+          - name: "{{ vm_network }}"
+            ip: "{{ vm_ip }}"
+            netmask: "{{ vm_netmask }}"
+            gateway: "{{ vm_gateway }}"
+        customization:
+          dns_servers: "{{ dns_servers }}"
+          dns_suffix: "{{ dns_search|default(omit) }}"
+          domain: "{{ dns_domain }}"
+          hostname: "{{ vm_name }}"
+        datastore: "{{ datastore }}"
+        name: "{{ vm_name }}"
+        folder: "{{ folder|default(omit) }}"
+        state: poweredon
+        wait_for_ip_address: yes
+        wait_for_customization: yes
+        validate_certs: no
+      delegate_to: localhost

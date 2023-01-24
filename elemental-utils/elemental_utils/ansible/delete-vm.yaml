@@ -1,0 +1,18 @@
+---
+- name: Delete a VM from vCenter
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Delete VM from disk
+      vmware_guest:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        datacenter: "{{ datacenter }}"
+        cluster: "{{ cluster }}"
+        folder: "{{ folder|default(omit) }}"
+        name: "{{ vm_name }}"
+        state: absent
+        force: yes
+        validate_certs: no
+      delegate_to: localhost

@@ -1,0 +1,13 @@
+---
+- name: Get Info for VMs (should be run with json stdout callback)
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Get VM Info
+      vmware_vm_info:
+        hostname: "{{ vcenter.address }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        folder: "{{ vcenter.folder }}"
+        validate_certs: no
+      delegate_to: localhost

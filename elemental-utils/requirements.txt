@@ -1,0 +1,9 @@
+pynetbox
+six==1.*
+dnspython
+paramiko
+ansible>=2.9.27
+pyvmomi
+pysftp
+pyyaml
+hvac

@@ -1,0 +1,42 @@
+---
+- name: Deploy VM from an OVA
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Deploy VM
+      community.vmware.vmware_deploy_ovf:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        datacenter: "{{ datacenter }}"
+        cluster: "{{ cluster }}"
+        ovf: "{{ vm_ova }}"
+        networks: "{u'Network':u'{{ vm_network }}'}"
+        datastore: "{{ datastore }}"
+        name: "{{ vm_name }}"
+        folder: "{{ folder|default(omit) }}"
+        wait_for_ip_address: yes
+        allow_duplicates: no
+        validate_certs: no
+      delegate_to: localhost
+
+    - name: Power on VM
+      community.vmware.vmware_guest_powerstate:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        folder: "{{ folder|default(omit) }}"
+        name: "{{ vm_name }}"
+        state: powered-on
+        validate_certs: no
+      delegate_to: localhost
+
+    - name: Wait for guest tools
+      community.vmware.vmware_guest_tools_wait:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        folder: "{{ folder|default(omit) }}"
+        name: "{{ vm_name }}"
+        validate_certs: no
+      delegate_to: localhost

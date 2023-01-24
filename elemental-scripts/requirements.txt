@@ -1,0 +1,6 @@
+PyYAML
+paramiko
+colorama
+git+https://gitlab.systems.cll.cloud/python-libraries/elemental-utils.git@master#egg=elemental_utils
+git+https://gitlab.systems.cll.cloud/jclarke/webex-log-handler.git@master#egg=webex_handler
+git+https://gitlab.systems.cll.cloud/python-libraries/umbr-api.git@master#egg=umbr_api

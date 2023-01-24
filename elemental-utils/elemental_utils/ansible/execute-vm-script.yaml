@@ -1,0 +1,21 @@
+---
+- name: Execute a script on a VM
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Execute script
+      vmware_vm_shell:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        datacenter: "{{ datacenter }}"
+        folder: "{{ vm_folder|default(omit) }}"
+        vm_id: "{{ vm_name }}"
+        vm_username: "{{ lookup('env', 'VM_SCRIPT_USERNAME') }}"
+        vm_password: "{{ lookup('env', 'VM_SCRIPT_PASSWORD') }}"
+        vm_shell: "{{ script_name }}"
+        vm_shell_args: "{{ script_arguments }}"
+        vm_shell_env: "{{ ['VM_USERNAME=' + lookup('env', 'VM_SCRIPT_USERNAME'), 'VM_PASSWORD=' + lookup('env', 'VM_SCRIPT_PASSWORD')] + script_environment }}"
+        wait_for_process: true
+        validate_certs: no
+      delegate_to: localhost

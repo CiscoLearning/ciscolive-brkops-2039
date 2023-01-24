@@ -1,0 +1,21 @@
+---
+- name: Add a disk to a VM
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Add disk
+      vmware_guest_disk:
+        hostname: "{{ vcenter }}"
+        username: "{{ lookup('env', 'HOST_VCENTER_USER') }}"
+        password: "{{ lookup('env', 'HOST_VCENTER_PASS') }}"
+        datacenter: "{{ datacenter }}"
+        folder: "{{ vm_folder|default(omit) }}"
+        name: "{{ vm_name }}"
+        disk:
+          - type: thin
+            autoselect_datastore: true
+            size_gb: "{{ disk_size|int }}"
+            unit_number: "{{ disk_unit|int }}"
+            scsi_controller: 0
+        validate_certs: no
+      delegate_to: localhost
